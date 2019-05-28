@@ -47,13 +47,12 @@ def main():
     rubrics = ['Мир', 'Россия', 'Политика', 'Экономика', 'Наука и техника', 'Украина',
                'Госэкономика', 'Спорт', 'Общество', 'Бывший СССР', 'Культура', 'Медиа',
                'Футбол', 'Музыка', 'Наука']
-    lenta = Dataset(use_title=False, rubrics=rubrics, random_state=SEED, subsample=0.1)
+    lenta = Dataset(use_title=False, rubrics=rubrics, random_state=SEED, subsample=0.3)
 
     X, y = lenta.get_data()
 
     models = [
         LogisticRegression(random_state=SEED),
-        MultinomialNB(),
         GaussianNB(),
         SVC(),
         RandomForestClassifier(),

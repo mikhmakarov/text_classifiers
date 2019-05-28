@@ -25,7 +25,6 @@ class Word2VecPretrainedVectorizer(object):
                 if word in self.model:
                     embds.append(np.array(self.model.get_vector(word)))
                 else:
-                    print(word)
                     unknown.add(word)
 
             embds = np.array(embds)
