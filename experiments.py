@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 import json
 
 import imp
@@ -64,7 +62,7 @@ def main():
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
 
-    transformations = ['bow']
+    transformations = ['elmo']
 
     for trans in transformations:
         for model in models:

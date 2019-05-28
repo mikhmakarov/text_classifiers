@@ -40,8 +40,9 @@ class Dataset(object):
                  max_len_doc_threshold=1000):
         self.morph = pymorphy2.MorphAnalyzer(result_type=None)
         self.label_encoder = LabelEncoder()
-        self.count_vectorizer = CountVectorizer(tokenizer=lambda x: x, preprocessor=lambda x: x, min_df=10)
-        self.tfidf_vectorized = TfidfVectorizer(tokenizer=lambda x: x, preprocessor=lambda x: x, min_df=10)
+
+        self.count_vectorizer = CountVectorizer(tokenizer=self._identity, preprocessor=self._identity, min_df=10)
+        self.tfidf_vectorized = TfidfVectorizer(tokenizer=self._identity, preprocessor=self._identity, min_df=10)
         self.word2vec_vectorizer = Word2VecPretrainedVectorizer()
         self.word2vec_custom_vectorizer = Word2VecCustomVectorizer()
         self.elmo_vectorizer = ElmoPretrainedVectorizer()
@@ -135,7 +136,7 @@ class Dataset(object):
         steps = [('extract_features', self._get_transformer(transform_type))]
 
         if transform_type in ['bow', 'tf-idf']:
-            steps.append(('to_dense', FunctionTransformer(lambda x: x.todense(), accept_sparse=True)))
+            steps.append(('to_dense', FunctionTransformer(self._to_dense, accept_sparse=True)))
 
         if standardize or pca:
             steps.append(('standardization', self.standard_scaler))
@@ -147,6 +148,14 @@ class Dataset(object):
         pipeline = Pipeline(steps)
 
         return pipeline
+
+    @staticmethod
+    def _to_dense(x):
+        return x.todense()
+
+    @staticmethod
+    def _identity(x):
+        return x
 
     def _get_top_words(self, rubrics=None, n=10, ngram=1):
         if rubrics is None:
