@@ -39,7 +39,6 @@ class Dataset(object):
                  min_len_doc_threshold=3,
                  max_len_doc_threshold=1000):
         self.morph = pymorphy2.MorphAnalyzer(result_type=None)
-        self.to_ud = converters.converter('opencorpora-ext', 'ud20')
         self.label_encoder = LabelEncoder()
         self.count_vectorizer = CountVectorizer(tokenizer=lambda x: x, preprocessor=lambda x: x, min_df=10)
         self.tfidf_vectorized = TfidfVectorizer(tokenizer=lambda x: x, preprocessor=lambda x: x, min_df=10)
