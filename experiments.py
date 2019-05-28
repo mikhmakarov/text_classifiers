@@ -4,8 +4,8 @@ import imp
 import datasets
 
 import numpy as np
-import dill
 import os
+import tensorflow as tf
 
 imp.reload(datasets)
 
@@ -47,7 +47,7 @@ def main():
     rubrics = ['Мир', 'Россия', 'Политика', 'Экономика', 'Наука и техника', 'Украина',
                'Госэкономика', 'Спорт', 'Общество', 'Бывший СССР', 'Культура', 'Медиа',
                'Футбол', 'Музыка', 'Наука']
-    lenta = Dataset(use_title=False, rubrics=rubrics, random_state=SEED, subsample=0.01)
+    lenta = Dataset(use_title=False, rubrics=rubrics, random_state=SEED, subsample=0.1)
 
     X, y = lenta.get_data()
 
@@ -64,18 +64,20 @@ def main():
 
     transformations = ['elmo']
 
-    for trans in transformations:
-        for model in models:
-            clf = model
+    with tf.device("/gpu:0"):
+        # Setup operations
+        for trans in transformations:
+            for model in models:
+                clf = model
 
-            pipeline = lenta.get_transform_pipeline(clf, trans, standardize=False)
-            scores = cross_val_score(pipeline, X, y, verbose=10, cv=cv, n_jobs=5)
-            mean = np.mean(scores)
-            std = np.std(scores)
-            res = {'mean': round(mean, 3), 'std': round(std, 3)}
-            msg = 'Transformation: {}, Model: {}, accuracy {:.3f}(+- {:.3f})'
-            print(msg.format(trans, model, mean, std))
-            save_result(type(model).__name__ + '_' + trans, res)
+                pipeline = lenta.get_transform_pipeline(clf, trans, standardize=False)
+                scores = cross_val_score(pipeline, X, y, verbose=10, cv=cv, n_jobs=1)
+                mean = np.mean(scores)
+                std = np.std(scores)
+                res = {'mean': round(mean, 3), 'std': round(std, 3)}
+                msg = 'Transformation: {}, Model: {}, accuracy {:.3f}(+- {:.3f})'
+                print(msg.format(trans, model, mean, std))
+                save_result(type(model).__name__ + '_' + trans, res)
 
 
 if __name__ == '__main__':
