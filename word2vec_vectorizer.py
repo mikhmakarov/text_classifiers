@@ -6,7 +6,10 @@ from gensim.models import Word2Vec
 
 class Word2VecPretrainedVectorizer(object):
     def __init__(self):
-        self.model = gensim.models.KeyedVectors.load('fasttext/model.model')
+        try:
+            self.model = gensim.models.KeyedVectors.load('fasttext/model.model')
+        except:
+            self.model = None
 
     def fit(self, *args, **kwargs):
         return self
