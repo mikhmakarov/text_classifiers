@@ -1,3 +1,5 @@
+import numpy as np
+
 from deeppavlov.models.embedders.elmo_embedder import ELMoEmbedder
 
 elmo = ELMoEmbedder("http://files.deeppavlov.ai/deeppavlov_data/elmo_ru-wiki_600k_steps.tar.gz")
@@ -11,5 +13,5 @@ class ElmoPretrainedVectorizer(object):
         return self
 
     def transform(self, docs):
-        return elmo(docs.tolist())
+        return np.array(elmo(docs.tolist()))
 
