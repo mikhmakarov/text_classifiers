@@ -97,7 +97,7 @@ six==1.12.0
 smart-open==1.8.3
 stop-words==2018.7.23
 tensorboard==1.13.1
-tensorflow==1.13.1
+tensorflow==1.15.0
 tensorflow-estimator==1.13.0
 tensorflow-hub==0.4.0
 termcolor==1.1.0
